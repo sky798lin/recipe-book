@@ -1,11 +1,11 @@
 import { useState } from "react"
 
 const AddRecipe = ({onAddRecipe}) => {
-  const {title, setTitle} = useState('')
-  const {ingredients, setIngredients} = useState([{ingredient: '', quantity: ''}])
-  const {directions, setDirections} = useState('')
+  const [title, setTitle] = useState('')
+  const [ingredients, setIngredients] = useState([{ingredient: '', quantity: ''}])
+  const [directions, setDirections] = useState('')
 
-  const handleTitleChange = event => {
+  const handleTitleChange = (event) => {
     setTitle(event.target.value)
   }
 
@@ -25,12 +25,17 @@ const AddRecipe = ({onAddRecipe}) => {
     setIngredients(newIngredients)
   }
 
-  const handleDirectionsChange = event => {
+  const handleDirectionsChange = (event) => {
     setDirections(event.target.value)
   }
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
+
+    if(!title) {
+      alert('Please add a recipe')
+      return
+    }
     onAddRecipe({ title, ingredients, directions });
     setTitle('');
     setIngredients([{ ingredient: '', quantity: '' }]);
@@ -40,24 +45,26 @@ const AddRecipe = ({onAddRecipe}) => {
   return (
     <form className='add-form' onSubmit={handleSubmit}>
         <div className='form-control'>
-            <label>Recipe Name</label>
-            <input type='text' name='title' value={title} onChange={handleTitleChange} />
+          <label>Recipe Name</label>
+          <input type='text' name='title' value={title} onChange={handleTitleChange} />
         </div>
-        {/*<div className='form-control'>
-            <label>Ingredients</label>
-            {ingredients.map((ingredient, index) => (
-                <div key={index}>
-                    <input type='text' name='ingredient' value={ingredient.ingredient} onChange={handleIngredientsChange(index)} />
-                    <input type='text' name='quantity' value={ingredient.quantity} onChange={handleIngredientsChange(index)} />
-                    <button type='button' onClick={handleRemoveIngredient(index)}>
-                        Remove
-                    </button>
-                </div>
-            ))}
-            <button type='button' onClick={handleAddIngredient}>
-                Add Ingredient
-            </button>
-            </div>*/}
+        <div className='form-control'>
+          <label>Ingredients</label>
+          {ingredients.map((ingredient, index) => (
+            <div key={index}>
+              <label>Ingredient</label>
+              <input type='text' name='ingredient' value={ingredient.ingredient} onChange={handleIngredientsChange(index)} />
+              <label>Quantity</label>
+              <input type='text' name='quantity' value={ingredient.quantity} onChange={handleIngredientsChange(index)} />
+              <button type='button' onClick={handleRemoveIngredient(index)}>
+                Remove
+              </button>
+            </div>
+          ))}
+          <button type='button' onClick={handleAddIngredient}>
+            Add Ingredient
+          </button>
+        </div>
         <div className='form-control'>
             <label>Directions</label>
             <textarea value={directions} onChange={handleDirectionsChange} />

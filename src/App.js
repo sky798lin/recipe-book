@@ -1,6 +1,8 @@
 import { useState } from "react"
 import Header from "./components/Header"
 import Recipe from "./components/Recipes"
+import Button from "./components/Button"
+import AddRecipe from "./components/AddRecipe"
 
 const App = () => {
   const [recipes, setRecipes] = useState([
@@ -39,9 +41,29 @@ const App = () => {
     setRecipes(recipes.filter((recipe) => recipe.id !== id))
   }
 
+  const [showModal, setShowModal] = useState(false)
+
+  const handleAddRecipe = (recipe) => {
+    const id = Math.floor(Math.random() * 10000)+1
+    const newRecipe = {id, ...recipe}
+    setRecipes(...recipes, newRecipe)
+    setShowModal(false)
+  }
+
   return (
     <div className="container">
       <Header />
+      <Button color ='green' text='Add' onClick={() => setShowModal(true)} />
+      {showModal && (
+        <div style={{ background: 'rgba(0,0,0,0.5)', position: 'fixed', top: 0, bottom: 0, left: 0, right: 0 }}>
+          <div style={{ background: 'white', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px' }}>
+            <AddRecipe onAddRecipe={handleAddRecipe} />
+            <button type="button" onClick={() => setShowModal(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       {recipes.length > 0 ? 
         (<Recipe recipes={recipes} onDelete ={deleteRecipe} />) 
         : ('Add a recipe')
